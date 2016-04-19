@@ -1,0 +1,220 @@
+<!doctype html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <title>PRO_TrackR | Admin Login</title>
+    <meta name="description" content="">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
+    <!-- Jquery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Exo:600' rel='stylesheet' type='text/css'>    
+
+  </head>
+  <body>
+
+      <div class="loading_indicator">
+        <div class="loading_indicator_inside_div">
+          <i class="fa fa-spinner fa-spin fa-3x"></i>
+        </div>
+      </div>
+      
+      <span style="margin-top:20px; font-size:24px;" id="page_Subhead">Welcome, <span></span></span>
+      <span class="pull-right" style="font-size:28px;" id="page_head">PRO_TrackR Dashboard</span>
+      <i class="fa fa-sign-out fa-2x" style="cursor:pointer;" onclick="logout();"></i>
+      
+      <div style="margin-top:25px;">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#visits" aria-controls="visits" role="tab" data-toggle="tab">VISITS</a></li>
+          <li role="presentation"><a href="#add_pro" aria-controls="add_pro" role="tab" data-toggle="tab">ADD P.R.O.</a></li>
+          <!-- <li role="presentation"><a href="#stock" aria-controls="stock" role="tab" data-toggle="tab">XYZ</a></li> -->
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="visits">
+            <div class="container-fluid">
+              <div class="row">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Date Time</th>
+                      <th>Doctor's Name</th>
+                      <th>Image URL</th>
+                    </tr>
+                  </thead>
+                  <tbody id="visits_tableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="add_pro">
+            <div class="container-fluid">
+              <div class="row">
+                <table class="table table-bordered">
+                  <thead style="visibility:hidden;">
+                    <tr>
+                      <th>#</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Username</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input class="form-control" placeholder="Name" id="Item_name_1"></input></td>
+                      <td><input class="form-control" placeholder="Email" id="Item_email_1"></input></td>
+                      <td><input class="form-control" placeholder="Mobile" id="Item_mobile_1"></input></td>
+                      <td><input class="form-control" placeholder="Password" id="Item_password_1"></input></td>
+                      <td><button class="btn btn-primary" type="button" id="Item_btn_1"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="row">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Mobile</th>
+                      <th>password</th>
+                    </tr>
+                  </thead>
+                  <tbody id="add_pro_tableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- <div role="tabpanel" class="tab-pane" id="stock">
+            <div class="container-fluid">
+              <div class="row">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Item</th>
+                      <th>Type</th>
+                      <th>Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody id="STOCK_tableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+      </div>
+
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+      <!-- Firebase CDN -->
+      <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
+      
+      <!-- JavaScript -->
+      <script>
+
+        var authObj;
+        
+        $('.loading_indicator').hide();
+        var root = new Firebase('https://girlsapp.firebaseio.com/');
+        root.child("Converter").child("ConversionTypes").push({
+            "name": "Currency",
+            "icon_url": "http://www.jainakshat.in/swap.png",
+            "unit_types": "Currency unit"
+          });
+        root.child("Converter").child("ConversionTypes").push({
+            "name": "Weight",
+            "icon_url": "http://www.jainakshat.in/swap.png",
+            "unit_types": "Weight unit"
+          });
+        root.child("Converter").child("ConversionTypes").push({
+            "name": "Length",
+            "icon_url": "http://www.jainakshat.in/swap.png",
+            "unit_types": "Length unit"
+          });
+        root.child("Converter").child("ConversionTypes").push({
+            "name": "Speed",
+            "icon_url": "http://www.jainakshat.in/swap.png",
+            "unit_types": "Speed unit"
+          });
+        root.child("Converter").child("ConversionTypes").push({
+            "name": "Volume",
+            "icon_url": "http://www.jainakshat.in/swap.png",
+            "unit_types": "Volume unit"
+          });
+        root.child("Converter").child("ConversionTypes").push({
+            "name": "Area",
+            "icon_url": "http://www.jainakshat.in/swap.png",
+            "unit_types": "Area unit"
+          });
+        /*var authData = root.getAuth();
+        root.child("admins").child(authData.uid).once("value", function(data) {
+          authObj = data.val();
+          $('#page_Subhead span').html(authObj.name);
+        });
+        
+        //------ for visits option ------//
+        root.child('visits').on("value", function(snapshot) {
+          var i=0;
+          $('#visits_tableBody').html("");
+          snapshot.forEach(function(childData) {
+            i++;
+            var user_phone = chil
+            dData.val().user_phone;
+            var date_time = childData.val().date+" ; "+childData.val().time;
+            var doctor_name = childData.val().doctor_name;
+            var image_url = childData.val().image_url;
+            root.child("user_hash").child(user_phone).on("value", function(userHash_snapshot) {
+              root.child("Users").child(userHash_snapshot.val()).on("value", function(user_snapshot) {
+                $('#visits_tableBody').append("<tr><th scope='row'>"+i+"</th><td>"+user_snapshot.val().Item_name+"</td><td>"+date_time+"</td><td>"+doctor_name+"</td><td>"+image_url+"</td></tr>");
+              });
+            });
+            /**/
+        /*  });
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });*/
+        //------  ------//
+
+
+        //------ for add_pro option ------//
+        $('#Item_btn_1').click(function() {
+          
+          /*root.child("Converter").child("ConversionTypes").val()).set(pushRef.key());
+          $('#Item_name_1').val("");
+          $('#Item_email_1').val("");
+          $('#Item_mobile_1').val("");
+          $('#Item_password_1').val("");*/
+        });
+
+        /*root.child('Users').on("value", function(snapshot) {
+          var i=0;
+          $('#add_pro_tableBody').html("");
+          snapshot.forEach(function(childData) {
+            i++;
+            $('#add_pro_tableBody').append("<tr><th scope='row'>"+i+"</th><td>"+childData.val().Item_name+"</td><td>"+childData.val().Item_email+"</td><td>"+childData.val().Item_mobile+"</td><td>"+childData.val().Item_password+"</td></tr>");
+          });
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+        //------  ------//
+
+        // Logout function
+        var logout = function() {
+          root.unauth();
+          location.href="index.html";
+        }*/
+
+      </script>
+
+</body>
+</html>

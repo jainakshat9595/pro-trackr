@@ -1,0 +1,22 @@
+html, body {
+	padding: 10px;
+	color:black !important;
+}
+#page_head {
+	color:black;
+	font-family: 'Exo';
+	letter-spacing: 1px;
+}
+#page_Subhead {
+	color:black;
+	font-family: 'Exo';
+	letter-spacing: 1px;
+}
+.loading_indicator {
+	position: fixed;
+    top: 2em;
+    right: 2em;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    background-color: rgba(221,221,221,0.5);
+}
